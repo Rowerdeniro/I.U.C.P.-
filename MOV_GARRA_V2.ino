@@ -4,10 +4,10 @@ Servo pinza;
 Servo servoX;
 Servo servoY;
 
-int posAbierto = 10;   // Posición para abrir la pinza
-int posCerrado = 90;   // Posición para cerrar la pinza
-int posX = 90;         // Posición inicial en el eje X
-int posY = 90;         // Posición inicial en el eje Y
+int posAbierto = 1;   // Posición para abrir la pinza
+int posCerrado = 173;   // Posición para cerrar la pinza
+int posX = 80;         // Posición inicial en el eje X
+int posY = 180;         // Posición inicial en el eje Y
 
 void setup() {
   pinza.attach(9);      // Conecta el servo de la pinza al pin 9
@@ -23,18 +23,31 @@ void loop() {
   if (Serial.available() > 0) {
     char command = Serial.read();
 
-    if (command == 'M') { // Mover todos los servos a la vez
+    if (command == 'm') { // Mover todos los servos a la vez
       pinza.write(posAbierto);
+      delay(1000);  // Espera 1 segundo
+      servoX.write(posX - 60); // Mueve el servo X
+      delay(1000);  // Espera 1 segundo
+      servoY.write(posY - 80); // Mueve el servo Y
       delay(1000);  // Espera 1 segundo
       pinza.write(posCerrado);
       delay(1000);  // Espera 1 segundo
-      servoX.write(posX + 30); // Mueve el servo X
-      delay(1000);  // Espera 1 segundo
       servoX.write(posX); // Vuelve al punto inicial en X
       delay(1000);  // Espera 1 segundo
-      servoY.write(posY - 30); // Mueve el servo Y
+      servoY.write(posY); // Vuelve al punto inicial en Y
+    }
+    else if (command == 'r'){
+      pinza.write(posCerrado);
+      delay(1000);  // Espera 1 segundo
+      servoY.write(posY - 80); // Vuelve al punto inicial en Y
+      delay(1000);
+      pinza.write(posAbierto);
       delay(1000);  // Espera 1 segundo
       servoY.write(posY); // Vuelve al punto inicial en Y
+      delay(1000);
+      pinza.write(posCerrado);
+      delay(1000);
+
     }
   }
 }
